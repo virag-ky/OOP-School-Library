@@ -12,8 +12,7 @@ puts classroom.students
 student2 = Student.new(8, 2, 'Marie')
 classroom2 = Classroom.new(3)
 classroom2.add_student(student2)
-classroom2.students.each {|student| puts student.name}
-
+classroom2.students.each { |x| puts x.name }
 
 book = Book.new('Life is Good', 'Virag K.')
 puts book.title
@@ -28,14 +27,16 @@ puts rental.date
 puts rental.person.name
 puts rental.book.title
 
-person.rentals.each {|rental| puts rental.book.title}
+person.rentals.each { |item| puts item.book.title }
 
 book2 = Book.new('Math Magicians', 'John Doe')
 person2 = Person.new(22, 'John')
 rental2 = Rental.new('2022-09-27', person, book2)
-person.rentals.each {|rental| puts rental.book.title}
+puts rental2.date
+person.rentals.each { |item| puts item.book.title }
 
-book.rentals.each {|rental| puts rental.person.name}
+book.rentals.each { |item| puts item.person.name }
 
 rental3 = Rental.new('2022-09-27', person2, book)
-book.rentals.each {|rental| puts rental.person.name}
+puts rental3.book.title
+book.rentals.each { |item| puts item.person.name }
