@@ -7,9 +7,10 @@ class Person < Nameable
     @age = age
     @name = name
     @parent_permission = parent_permission
+    @rentals = []
   end
 
-  attr_reader :id
+  attr_reader :id, :rentals
   attr_accessor :name, :age
 
   def correct_name
