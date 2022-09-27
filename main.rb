@@ -1,9 +1,14 @@
 require_relative 'person'
 require_relative 'decorators'
+require_relative 'classroom'
+require_relative 'student'
 
-person = Person.new(5, 'maisythedog')
-puts person.correct_name
-capitalized_person = CapitalizeDecorator.new(person)
-puts capitalized_person.correct_name
-capitalized_trimmed_person = TrimmerDecorator.new(capitalized_person)
-puts capitalized_trimmed_person.correct_name
+student = Student.new(12, 5, 'Maisy')
+puts student.name
+classroom = Classroom.new(5)
+puts classroom.students
+student2 = Student.new(8, 2, 'Marie')
+classroom2 = Classroom.new(3)
+classroom2.add_student(student2)
+classroom2.students.each {|student| puts student.name}
+
