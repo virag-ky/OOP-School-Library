@@ -13,6 +13,11 @@ class Person < Nameable
   attr_reader :id, :rentals
   attr_accessor :name, :age
 
+  def add_rental(rental)
+    @rentals.push(rental)
+    rental.person = self
+  end
+
   def correct_name
     @name
   end
