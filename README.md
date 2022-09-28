@@ -2,7 +2,7 @@
 
 # OOP School Library
 
-> In this project, I will start building a school library app. In this initial step, I implemented the classes to represent students and teachers.
+> This is a console app project which behaves as a school library. The user can add persons(students, teachers), add books, add rentals, list all books, list all persons/students/teachers and list all rentals by a given person's ID.
 
 ## Built With
 
@@ -43,6 +43,18 @@ or
 
 ```
 rubocop --auto-correct-all
+```
+
+### Run the app
+
+```
+./main
+```
+
+### Exit the app
+
+```
+9
 ```
 
 ## Author
