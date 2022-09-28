@@ -39,8 +39,7 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    create_rental(date, book_list[index_of_book], people[index_of_person])
-    rental = Rental.new(date, person, book)
+    rental = Rental.new(date, people[index_of_person], book_list[index_of_book])
     puts 'Rental successfully created!'
     @rentals << rental unless @rentals.include?(rental)
   end
@@ -59,7 +58,7 @@ class App
   def list_all_books
     puts "Books list:\n\n"
     if @book_list.empty?
-      'The list is empty, add some books...'
+      puts 'The list is empty, add some books...'
     else
       @book_list.each_with_index do |book, index|
         puts "#{index}) Title: '#{book.title}', Author: #{book.author}"
@@ -129,10 +128,18 @@ class App
   end
 
   def list_all_students
-    @students.empty? ? 'The list is empty, add some students...' : @students.each { |student| puts student.name }
+    if @students.empty?
+      puts 'The list is empty, add some students...'
+    else
+      @students.each { |student| puts student.name }
+    end
   end
 
   def list_all_teachers
-    @teachers.empty? ? 'The list is empty, add some teachers...' : @teachers.each { |teacher| puts teacher.name }
+    if @teachers.empty?
+      puts 'The list is empty, add some teachers...'
+    else
+      @teachers.each { |teacher| puts teacher.name }
+    end
   end
 end
