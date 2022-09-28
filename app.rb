@@ -161,7 +161,7 @@ class App
       puts 'The list is empty, add some teachers...'
     else
       @teachers.each do |teacher|
-        puts "Name: #{teacher.name}, Specialization: #{teacher.specialization}, ID: #{teacher.id}, Age: #{teacher.age}"
+        puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
       end
     end
   end
