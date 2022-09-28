@@ -9,8 +9,9 @@ def main
 end
 
 def create_person(num)
-  if num == 1
-    puts "Enter the age of the student:"
+  case num
+  when 1
+    puts 'Enter the age of the student:'
     age = gets.chomp.to_i
     puts "Enter the student's classroom (number):"
     classroom = gets.chomp.to_i
@@ -18,8 +19,8 @@ def create_person(num)
     name = gets.chomp
     create_student(age, classroom, name)
     puts "The student named '#{name}' of age #{age} with the classroom number #{classroom} was created successfully!"
-  elsif num == 2
-    puts "Enter the age of the teacher:"
+  when 2
+    puts 'Enter the age of the teacher:'
     age = gets.chomp.to_i
     puts "Enter the teacher's specialization:"
     specialization = gets.chomp
@@ -30,6 +31,27 @@ def create_person(num)
   end
 end
 
+def options(num)
+  case num
+  when 1
+    puts "Books list:\n\n"
+    list_all_books
+  when 2
+    puts "People's list:\n\n"
+    list_all_people
+  when 3
+    puts 'Which do you want to create? A student (press 1) or a teacher (press 2)?'
+    num = gets.chomp.to_i
+    create_person(num)
+  when 4
+    puts 'Enter the title of the book:'
+    title = gets.chomp
+    puts 'Enter the author of the book:'
+    author = gets.chomp
+    puts "The book \'#{title}\' by #{author} is created successfully!"
+    create_book(title, author)
+  end
+end
 
 def prompt_user
   puts "
@@ -40,29 +62,12 @@ def prompt_user
         4 - Create a book
         5 - Create a rental
         6 - List all rentals for a given person (id)
-        7 - Exit"
+        7 - List all students
+        8 - List all teachers
+        9 - Exit"
 
   answer = gets.chomp.to_i
-
-  case answer
-  when 1
-    puts "Books list:\n\n"
-    list_all_books
-  when 2
-    puts "People's list:\n\n"
-    list_all_people
-  when 3
-    puts "Which do you want to create? A student (press 1) or a teacher (press 2)?"
-    num = gets.chomp.to_i
-    create_person(num)
-  when 4
-    puts 'Enter the title of the book:'
-    title = gets.chomp
-    puts 'Enter the author of the book:'
-    author = gets.chomp
-    puts "The book \'#{title}\' by #{author} is created successfully!"
-   create_book(title, author)
-  end
+  options(answer)
   prompt_user
 end
 
