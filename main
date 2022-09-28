@@ -20,8 +20,8 @@ def options(num)
     create_book
   when 5
     create_rental
-  when 9
-    exit
+  when 6
+    list_rentals_by_id
   end
 end
 
@@ -31,6 +31,8 @@ def extra_options(num)
     list_all_students
   when 8
     list_all_teachers
+  when 9
+    exit
   end
 end
 

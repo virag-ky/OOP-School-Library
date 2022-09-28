@@ -44,13 +44,17 @@ class App
     @rentals << rental unless @rentals.include?(rental)
   end
 
-  def list_all_rentals
+  def list_rentals_by_id
+    print "Enter a person's ID: "
+    person_id = gets.chomp.to_i
     puts "Rentals list:\n\n"
     if @rentals.empty?
-      'The list is empty, add some rentals...'
+      puts 'The list is empty, add some rentals...'
     else
-      @rentals.each_with_index do |rental, index|
-        puts "#{index}) Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}"
+      @rentals.select do |rental|
+        if rental.person.id == person_id
+          puts "Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}"
+        end
       end
     end
   end
@@ -66,9 +70,8 @@ class App
     end
   end
 
-  def create_student(age, classroom, name)
-    class_room = Classroom.new(classroom)
-    student = Student.new(age, class_room, name)
+  def create_student(age, classroom, name, parent_permission)
+    student = Student.new(age, classroom, name, parent_permission: parent_permission)
     @people << student unless @people.include?(student)
     @students << student unless @students.include?(student)
   end
@@ -97,8 +100,24 @@ class App
     classroom = gets.chomp.to_i
     puts "Enter the student's name:"
     name = gets.chomp
-    create_student(age, classroom, name)
+    parent_permission = true
+    permission?(parent_permission)
+    create_student(age, classroom, name, parent_permission)
     puts "The student named '#{name}' of age #{age} with the classroom number #{classroom} was created successfully!"
+  end
+
+  def permission?(parent_permission)
+    print 'Has parent permission? [Y/N]:'
+    permission = gets.chomp
+
+    case permission
+    when 'n', 'N'
+      !parent_permission
+    when 'y', 'Y'
+      parent_permission
+    else
+      permission?(parent_permission)
+    end
   end
 
   def teacher_option
@@ -131,7 +150,7 @@ class App
     if @students.empty?
       puts 'The list is empty, add some students...'
     else
-      @students.each_with_index do |student, _index|
+      @students.each do |student|
         puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
       end
     end
@@ -141,7 +160,7 @@ class App
     if @teachers.empty?
       puts 'The list is empty, add some teachers...'
     else
-      @teachers.each_with_index do |teacher, _index|
+      @teachers.each do |teacher|
         puts "Name: #{teacher.name}, Specialization: #{teacher.specialization}, ID: #{teacher.id}, Age: #{teacher.age}"
       end
     end
