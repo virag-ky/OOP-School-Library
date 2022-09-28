@@ -20,6 +20,13 @@ def options(num)
     create_book
   when 5
     create_rental
+  when 9
+    exit
+  end
+end
+
+def extra_options(num)
+  case num
   when 7
     list_all_students
   when 8
@@ -42,6 +49,7 @@ def prompt_user
 
   answer = gets.chomp.to_i
   options(answer)
+  extra_options(answer)
   prompt_user
 end
 

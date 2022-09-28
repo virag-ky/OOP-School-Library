@@ -131,7 +131,9 @@ class App
     if @students.empty?
       puts 'The list is empty, add some students...'
     else
-      @students.each { |student| puts student.name }
+      @students.each_with_index do |student, _index|
+        puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
+      end
     end
   end
 
@@ -139,7 +141,9 @@ class App
     if @teachers.empty?
       puts 'The list is empty, add some teachers...'
     else
-      @teachers.each { |teacher| puts teacher.name }
+      @teachers.each_with_index do |teacher, _index|
+        puts "Name: #{teacher.name}, Specialization: #{teacher.specialization}, ID: #{teacher.id}, Age: #{teacher.age}"
+      end
     end
   end
 end
