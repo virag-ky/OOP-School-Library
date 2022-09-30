@@ -6,7 +6,6 @@ require_relative 'teacher'
 require_relative 'classroom'
 
 class App
-  attr_accessor :book_list, :people
 
   def initialize
     @book_list = []
