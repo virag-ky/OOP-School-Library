@@ -20,6 +20,7 @@ def main
     option = gets.chomp.to_i
     select = Select.new
     select.menu(option, app)
+    exit unless option != 7
   end
 end
 main
