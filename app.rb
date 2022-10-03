@@ -6,18 +6,12 @@ require_relative 'teacher'
 require_relative 'classroom'
 
 class App
-  attr_accessor :book_list, :people
-
   def initialize
     @book_list = []
     @people = []
     @students = []
     @teachers = []
     @rentals = []
-  end
-
-  def run
-    prompt_user
   end
 
   def create_book
@@ -39,7 +33,7 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    rental = Rental.new(date, people[index_of_person], book_list[index_of_book])
+    rental = Rental.new(date, @people[index_of_person], @book_list[index_of_book])
     puts 'Rental successfully created!'
     @rentals << rental unless @rentals.include?(rental)
   end
