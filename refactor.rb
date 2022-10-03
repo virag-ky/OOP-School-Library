@@ -15,6 +15,8 @@ class Select
       app.create_rental
     when 6
       app.list_rentals_by_id
+    when 7
+      exit
     end
   end
 end
