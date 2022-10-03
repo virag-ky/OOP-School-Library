@@ -16,7 +16,22 @@ class App
   end
 
   def run
-    prompt_user
+    puts "
+    Please choose an option by entering a number from below:\n
+    1 - List all books
+    2 - List all people
+    3 - Create a person
+    4 - Create a book
+    5 - Create a rental
+    6 - List all rentals for a given person (id)
+    7 - List all students
+    8 - List all teachers
+    9 - Exit"
+
+answer = gets.chomp.to_i
+options(answer)
+extra_options(answer)
+prompt_user
   end
 
   def create_book
