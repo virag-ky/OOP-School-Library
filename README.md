@@ -8,6 +8,11 @@
 
 - Ruby
 
+## Screenshot
+
+![Screenshot](https://user-images.githubusercontent.com/79658534/192894530-cde18f0e-8e7e-4b66-9985-8945f60c8bfa.png)
+
+
 ## Getting Started
 
 ### Prerequisites
