@@ -14,55 +14,6 @@ class App
     @rentals = []
   end
 
-  def run
-    puts "
-    Please choose an option by entering a number from below:\n
-    1 - List all books
-    2 - List all people
-    3 - Create a person
-    4 - Create a book
-    5 - Create a rental
-    6 - List all rentals for a given person (id)
-    7 - List all students
-    8 - List all teachers
-    9 - Exit"
-
-    answer = gets.chomp.to_i
-    options(answer)
-    extra_options(answer)
-    run
-  end
-
-  def options(num)
-    case num
-    when 1
-      list_all_books
-    when 2
-      list_all_people
-    when 3
-      person = CreatePerson.new
-     @people << person.create_person
-      
-    when 4
-      create_book
-    when 5
-      create_rental
-    when 6
-      list_rentals_by_id
-    end
-  end
-
-  def extra_options(num)
-    case num
-    when 7
-      list_all_students
-    when 8
-      list_all_teachers
-    when 9
-      exit
-    end
-  end
-
   def create_book
     puts 'Enter the title of the book:'
     title = gets.chomp
@@ -82,7 +33,7 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    rental = Rental.new(date, people[index_of_person], book_list[index_of_book])
+    rental = Rental.new(date, @people[index_of_person], @book_list[index_of_book])
     puts 'Rental successfully created!'
     @rentals << rental unless @rentals.include?(rental)
   end
@@ -113,52 +64,15 @@ class App
     end
   end
 
-  def list_all_people
-    puts "People's list:\n\n"
-    if @people.empty?
-      puts 'The list is empty, add some people...'
-    else
-      @people.each_with_index do |person, index|
-        if person.instance_of?(Student)
-          puts "#{index}) [Student] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        else
-          puts "#{index}) [Teacher] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        end
-      end
-    end
-  end
-
-  def list_all_students
-    if @students.empty?
-      puts 'The list is empty, add some students...'
-    else
-      @students.each do |student|
-        puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
-      end
-    end
-  end
-
-  def list_all_teachers
-    if @teachers.empty?
-      puts 'The list is empty, add some teachers...'
-    else
-      @teachers.each do |teacher|
-        puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
-      end
-    end
-  end
-end
-
-class CreatePerson < App
   def create_student(age, classroom, name, parent_permission)
     student = Student.new(age, classroom, name, parent_permission: parent_permission)
-    # @people << student unless @people.include?(student)
+    @people << student unless @people.include?(student)
     @students << student unless @students.include?(student)
   end
 
   def create_teacher(age, specialization, name)
     teacher = Teacher.new(age, specialization, name)
-    # @people << teacher unless @people.include?(teacher)
+    @people << teacher unless @people.include?(teacher)
     @teachers << teacher unless @teachers.include?(teacher)
   end
 
@@ -209,5 +123,40 @@ class CreatePerson < App
     name = gets.chomp
     create_teacher(age, specialization, name)
     puts "The teacher named '#{name}' of age #{age} with the specialization #{specialization} was created successfully!"
+  end
+
+  def list_all_people
+    puts "People's list:\n\n"
+    if @people.empty?
+      puts 'The list is empty, add some people...'
+    else
+      @people.each_with_index do |person, index|
+        if person.instance_of?(Student)
+          puts "#{index}) [Student] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+        else
+          puts "#{index}) [Teacher] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+        end
+      end
+    end
+  end
+
+  def list_all_students
+    if @students.empty?
+      puts 'The list is empty, add some students...'
+    else
+      @students.each do |student|
+        puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
+      end
+    end
+  end
+
+  def list_all_teachers
+    if @teachers.empty?
+      puts 'The list is empty, add some teachers...'
+    else
+      @teachers.each do |teacher|
+        puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
+      end
+    end
   end
 end
