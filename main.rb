@@ -1,10 +1,14 @@
 #!/usr/bin/env ruby
 
 require_relative 'refactor'
+require 'json'
+
 
 puts "Welcome to the School Library App!\n"
 
 def main
+
+  
   app = App.new
   loop do
     puts "

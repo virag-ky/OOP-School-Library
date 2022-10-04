@@ -4,6 +4,7 @@ require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
+require 'json'
 
 class App
   def initialize
@@ -21,7 +22,12 @@ class App
     author = gets.chomp
     book = Book.new(title, author)
     puts "The book \'#{title}\' by #{author} is created successfully!"
-    @book_list << book unless @book_list.include?(book)
+    @book_list << {title: book.title, author: book.author }
+    File.open("books.json", "w") do |f|
+      f.write(@book_list.to_json)
+    end
+    file = File.read("books.json")
+    puts file
   end
 
   def create_rental
@@ -53,15 +59,28 @@ class App
     end
   end
 
+
   def list_all_books
+    books = []
     puts "Books list:\n\n"
-    if @book_list.empty?
-      puts 'The list is empty, add some books...'
-    else
-      @book_list.each_with_index do |book, index|
-        puts "#{index}) Title: '#{book.title}', Author: #{book.author}"
+    book_file = File.open('books.json')
+    if File.exist?(book_file) && File.read(book_file) != '' 
+      data = book_file.read 
+      JSON.parse(data).each do |book| 
+        books << { title: book['title'], author: book['author']}
       end
-    end
+      else
+        File.write(book_file,'[]') 
+        puts 'The list is empty, add some books...'
+      end 
+      puts books 
+    # if .empty?
+    #   puts 'The list is empty, add some books...'
+    # else
+    #   @book_list.each_with_index do |book, index|
+    #     puts "#{index}) Title: '#{book.title}', Author: #{book.author}"
+    #   end
+    # end
   end
 
   def create_student(age, classroom, name, parent_permission)
