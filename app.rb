@@ -38,9 +38,13 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    rental = Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+    @rentals <<  Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+    rental = []
+    @rentals.each do |rent| 
+      rental << {date: rent.date, person: rent.person.name, title: rent.book.title}
+    end
+    File.write('rentals.json', rental.to_json)
     puts 'Rental successfully created!'
-    @rentals << rental unless @rentals.include?(rental)
   end
 
   def list_rentals_by_id
@@ -64,8 +68,8 @@ class App
     puts "Books list:\n\n"
 
     if File.exist?(file) && File.read(file) != ''
-      JSON.parse(File.read(file)).each do |book|
-        books_data << "Title: #{book['title']}, Author: #{book['author']} "
+      JSON.parse(File.read(file)).each_with_index do |book, index|
+        books_data << "#{index}) Title: #{book['title']}, Author: #{book['author']} "
       end
     else
       puts 'List is empty, please add some books...'
@@ -141,9 +145,26 @@ class App
   end
 
   def list_all_people
-    list_all_students
-    list_all_teachers
+    # list_all_students
+    # list_all_teachers
+    # @students = list_all_students
+    # @teachers = list_all_teachers 
+    # people = [*@teachers, *@students] 
+   
+    # people.each_with_index do |person|
+    #    puts "ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}" 
+    #  end 
+    student_array = []
+    student_array = JSON.parse(File.read('students.json'))
+    teacher_array = [] 
+    teacher_array = JSON.parse(File.read('teachers.json')) 
+    people_array = teacher_array | student_array 
+    peopledata = []
+    people_array.each_with_index do |person, index| 
+      peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
+      puts peopledata 
   end
+end
 
   def list_all_students
     filename = 'students.json'
