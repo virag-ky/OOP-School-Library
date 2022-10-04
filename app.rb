@@ -26,7 +26,6 @@ class App
     @book_list.each do |book|
       books << {title: book.title, author: book.author}
   end
-  
     File.write('books.json', books.to_json)
   end
 
@@ -76,15 +75,21 @@ class App
   end
 
   def create_student(age, classroom, name, parent_permission)
-    student = Student.new(age, classroom, name, parent_permission: parent_permission)
-    @people << student unless @people.include?(student)
-    @students << student unless @students.include?(student)
+    @students << Student.new(age, classroom, name, parent_permission: parent_permission)
+    student = []
+    @students.each do |std|
+      student << { id: std.id, name: std.name, age: std.age, classroom: std.classroom }
+    end
+    File.write('students.json', student.to_json)
   end
 
   def create_teacher(age, specialization, name)
-    teacher = Teacher.new(age, specialization, name)
-    @people << teacher unless @people.include?(teacher)
-    @teachers << teacher unless @teachers.include?(teacher)
+    @teachers << Teacher.new(age, specialization, name)
+    teacher = []
+    @teachers.each do |tch|
+      teacher << { id: tch.id, age: tch.age, name: tch.name }
+    end
+    File.write('teachers.json', teacher.to_json)
   end
 
   def create_person
@@ -152,22 +157,24 @@ class App
   end
 
   def list_all_students
-    if @students.empty?
-      puts 'The list is empty, add some students...'
-    else
-      @students.each do |student|
-        puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
+    filename = 'students.json'
+    studentsdata = []
+    if File.exist?(filename) && File.read(filename) != ''
+      JSON.parse(File.read(filename)).each do |student|
+        studentsdata.push("ID: #{student['id']}, Name:  #{student['name']}, Age:  #{student['age']}")
       end
     end
+    puts studentsdata
   end
 
   def list_all_teachers
-    if @teachers.empty?
-      puts 'The list is empty, add some teachers...'
-    else
-      @teachers.each do |teacher|
-        puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
+    filename = 'teachers.json'
+    teachersdata = []
+    if File.exist?(filename) && File.read(filename) != ''
+      JSON.parse(File.read(filename)).each do |teacher|
+        teachersdata.push("ID: #{teacher['id']}, Name:  #{teacher['name']}, Age:  #{teacher['age']}")
       end
     end
+    puts teachersdata
   end
 end
