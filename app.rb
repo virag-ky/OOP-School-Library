@@ -20,14 +20,14 @@ class App
     title = gets.chomp
     puts 'Enter the author of the book:'
     author = gets.chomp
-    book = Book.new(title, author)
+    @book_list << Book.new(title, author)
     puts "The book \'#{title}\' by #{author} is created successfully!"
-    @book_list << {title: book.title, author: book.author }
-    File.open("books.json", "w") do |f|
-      f.write(@book_list.to_json)
-    end
-    file = File.read("books.json")
-    puts file
+    books = []
+    @book_list.each do |book|
+      books << {title: book.title, author: book.author}
+  end
+  
+    File.write('books.json', books.to_json)
   end
 
   def create_rental
@@ -61,26 +61,18 @@ class App
 
 
   def list_all_books
-    books = []
+    file = 'books.json'
+    books_data = []
     puts "Books list:\n\n"
-    book_file = File.open('books.json')
-    if File.exist?(book_file) && File.read(book_file) != '' 
-      data = book_file.read 
-      JSON.parse(data).each do |book| 
-        books << { title: book['title'], author: book['author']}
+  
+    if File.exist?(file) && File.read(file) != '' 
+      JSON.parse(File.read(file)).each do |book| 
+         books_data << "Title: #{book['title']}, Author: #{book['author']} "
       end
-      else
-        File.write(book_file,'[]') 
-        puts 'The list is empty, add some books...'
-      end 
-      puts books 
-    # if .empty?
-    #   puts 'The list is empty, add some books...'
-    # else
-    #   @book_list.each_with_index do |book, index|
-    #     puts "#{index}) Title: '#{book.title}', Author: #{book.author}"
-    #   end
-    # end
+    else
+      puts "List is empty, please add some books..."
+    end
+    puts books_data
   end
 
   def create_student(age, classroom, name, parent_permission)
