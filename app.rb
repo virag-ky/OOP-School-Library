@@ -141,19 +141,24 @@ class App
     puts "The teacher named '#{name}' of age #{age} with the specialization #{specialization} was created successfully!"
   end
 
+  # def list_all_people
+  #   puts "People's list:\n\n"
+  #   if @people.empty?
+  #     puts 'The list is empty, add some people...'
+  #   else
+  #     @people.each_with_index do |person, index|
+  #       if person.instance_of?(Student)
+  #         puts "#{index}) [Student] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+  #       else
+  #         puts "#{index}) [Teacher] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+  #       end
+  #     end
+  #   end
+  # end
+
   def list_all_people
-    puts "People's list:\n\n"
-    if @people.empty?
-      puts 'The list is empty, add some people...'
-    else
-      @people.each_with_index do |person, index|
-        if person.instance_of?(Student)
-          puts "#{index}) [Student] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        else
-          puts "#{index}) [Teacher] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        end
-      end
-    end
+    list_all_students
+    list_all_teachers
   end
 
   def list_all_students
