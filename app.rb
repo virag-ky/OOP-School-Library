@@ -24,8 +24,8 @@ class App
     puts "The book \'#{title}\' by #{author} is created successfully!"
     books = []
     @book_list.each do |book|
-      books << {title: book.title, author: book.author}
-  end
+    books << { title: book.title, author: book.author }
+    end
     File.write('books.json', books.to_json)
   end
 
@@ -58,18 +58,17 @@ class App
     end
   end
 
-
   def list_all_books
     file = 'books.json'
     books_data = []
     puts "Books list:\n\n"
-  
-    if File.exist?(file) && File.read(file) != '' 
-      JSON.parse(File.read(file)).each do |book| 
-         books_data << "Title: #{book['title']}, Author: #{book['author']} "
+
+    if File.exist?(file) && File.read(file) != ''
+      JSON.parse(File.read(file)).each do |book|
+        books_data << "Title: #{book['title']}, Author: #{book['author']} "
       end
     else
-      puts "List is empty, please add some books..."
+      puts 'List is empty, please add some books...'
     end
     puts books_data
   end
