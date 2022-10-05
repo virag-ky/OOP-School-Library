@@ -4,6 +4,7 @@ require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
+require_relative 'load_data'
 require 'json'
 
 class App
@@ -15,14 +16,14 @@ class App
     @rentals = []
   end
 
+  include LoadData
+
   def create_book
     puts 'Enter the title of the book:'
     title = gets.chomp
     puts 'Enter the author of the book:'
     author = gets.chomp
-    if @book_list.length == 0
-      @book_list = get_all_books
-    end
+    @book_list = load_all_books if @book_list.length.zero?
     @book_list << Book.new(title, author)
     puts "The book \'#{title}\' by #{author} is created successfully!"
     books = []
@@ -42,30 +43,24 @@ class App
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp
 
-    puts 'Person Selected'
-    #people = list_all_people
-    puts @people[index_of_person].name
+    puts "Person Selected: #{@people[index_of_person].name}\n"
+    puts "Book Selected: #{@book_list[index_of_book].title}\n"
 
-    puts 'Book Selected'
-    #book_list = list_all_books
-    puts @book_list[index_of_book].title
-
-    @rentals = get_all_rentals
+    @rentals = load_all_rentals
     @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
-    
+
     rental = []
     @rentals.each do |rent|
-      rental << { date: rent.date, 
-        person: {id: rent.person.id, name: rent.person.name, age: rent.person.age}, 
-        book: {title: rent.book.title, author: rent.book.author} 
-      }
+      rental << { date: rent.date,
+                  person: { id: rent.person.id, name: rent.person.name, age: rent.person.age },
+                  book: { title: rent.book.title, author: rent.book.author } }
     end
     File.write('rentals.json', rental.to_json)
     puts 'Rental successfully created!'
   end
 
   def list_rentals_by_id
-    @rentals = get_all_rentals
+    @rentals = load_all_rentals
     print "Enter a person's ID: "
     person_id = gets.chomp.to_i
     puts "Rentals list:\n\n"
@@ -81,50 +76,19 @@ class App
   end
 
   def list_all_books
-    # file = 'books.json'
-    # books_data = []
     puts "Books list:\n\n"
-
-    @book_list = get_all_books
-
-    if @book_list.length == 0
+    @book_list = load_all_books
+    if @book_list.length.zero?
       puts 'List is empty, please add some books...'
     else
       @book_list.each_with_index do |book, index|
         puts "#{index}) Title: #{book.title}, Author: #{book.author} "
       end
     end
-
-
-
-    # if File.exist?(file) && File.read(file) != ''
-    #   JSON.parse(File.read(file)).each_with_index do |book, index|
-    #     books_data << "#{index}) Title: #{book['title']}, Author: #{book['author']} "
-    #   end
-    #   JSON.parse(File.read(file)).each_with_index do |book|
-    #     @book_list << Book.new(book['title'], book['author'])
-    #   end
-    # else
-    #   puts 'List is empty, please add some books...'
-    # end
-    #@book_list = books_data
-    
-    #puts books_data
-  end
-
-  def get_all_books
-    file = 'books.json'
-    books=[];
-    if File.exist?(file) && File.read(file) != ''
-      books = JSON.parse(File.read(file)).map { |book| Book.new(book['title'], book['author']) }
-    end
-    return books
   end
 
   def create_student(age, classroom, name, parent_permission)
-    if @students.length == 0
-      @students = get_all_students
-    end
+    @students = load_all_students if @students.length.zero?
     @students << Student.new(age, classroom, name, parent_permission: parent_permission)
     student = []
     @students.each do |std|
@@ -134,9 +98,7 @@ class App
   end
 
   def create_teacher(age, specialization, name)
-    if @teachers.length == 0
-      @teachers = get_all_teachers
-    end
+    @teachers = load_all_teachers if @teachers.length.zero?
     @teachers << Teacher.new(age, specialization, name)
     teacher = []
     @teachers.each do |tch|
@@ -169,20 +131,6 @@ class App
     puts "The student named '#{name}' of age #{age} with the classroom number #{classroom} was created successfully!"
   end
 
-  def permission?(parent_permission)
-    print 'Has parent permission? [Y/N]:'
-    permission = gets.chomp
-
-    case permission
-    when 'n', 'N'
-      !parent_permission
-    when 'y', 'Y'
-      parent_permission
-    else
-      permission?(parent_permission)
-    end
-  end
-
   def teacher_option
     puts 'Enter the age of the teacher:'
     age = gets.chomp.to_i
@@ -195,120 +143,37 @@ class App
   end
 
   def list_all_people
-    if @students.length == 0
-      @students = get_all_students
-    end
-    if @teachers.length == 0
-      @teachers = get_all_teachers
-    end
+    @students = load_all_students if @students.length.zero?
+    @teachers = load_all_teachers if @teachers.length.zero?
 
     @people = @teachers | @students
 
     @people.each_with_index do |person, index|
       puts "#{index} ID: #{person.id}, Name:  #{person.name}, Age:  #{person.age}"
     end
-
-    # student_array = []
-    # student_array = JSON.parse(File.read('students.json'))
-    # teacher_array = []
-    # teacher_array = JSON.parse(File.read('teachers.json'))
-    # people_array = teacher_array | student_array
-    # peopledata = []
-    # people_array.each_with_index do |person, index|
-    #   peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-    # end
-    # people_array.each_with_index do |person, index|
-    #   peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-    # end
-    # @people = peopledata
-    # puts @people
   end
 
   def list_all_students
-    @student = get_all_students
+    @student = load_all_students
 
-    if @student.length == 0
+    if @student.length.zero?
       puts 'Student List is empty. Please add students'
     else
-      @student.each_with_index do |student, index|
+      @student.each_with_index do |student, _index|
         puts "ID: #{student.id}, Name:  #{student.name}, Age:  #{student.age}"
       end
     end
-
-    # filename = 'students.json'
-    # studentsdata = []
-    # if File.exist?(filename) && File.read(filename) != ''
-    #   JSON.parse(File.read(filename)).each do |student|
-    #     studentsdata.push("ID: #{student['id']}, Name:  #{student['name']}, Age:  #{student['age']}")
-    #   end
-    #   JSON.parse(File.read(filename)).each_with_index do |student|
-    #     @students << Student.new(student['id'], student['name'], student['age'])
-    #   end
-    # else
-    #   puts 'Student List is empty. Please add students'
-    # end
-    # puts studentsdata
   end
 
   def list_all_teachers
-    @teachers = get_all_teachers
+    @teachers = load_all_teachers
 
-    if @teachers.length == 0
+    if @teachers.length.zero?
       puts 'There are no teachers. Please add some teachers to the list...'
     else
-      @teachers.each_with_index do |teacher, index|
+      @teachers.each_with_index do |teacher, _index|
         puts "ID: #{teacher.id}, Name:  #{teacher.name}, Age:  #{teacher.age}"
       end
     end
-
-    # filename = 'teachers.json'
-    # teachersdata = []
-    # if File.exist?(filename) && File.read(filename) != ''
-    #   JSON.parse(File.read(filename)).each do |teacher|
-    #     teachersdata.push("ID: #{teacher['id']}, Name:  #{teacher['name']}, Age:  #{teacher['age']}")
-    #   end
-    #   JSON.parse(File.read(filename)).each_with_index do |teacher|
-    #     @teachers << Teacher.new(teacher['id'], teacher['name'], teacher['age'])
-    #   end
-    # else
-    #   puts 'There are no teachers. Please add some teachers to the list...'
-    # end
-    # puts teachersdata
-  end
-
-  def get_all_students
-    file = 'students.json'
-    students=[];
-    if File.exist?(file) && File.read(file) != ''
-      students = JSON.parse(File.read(file)).map { 
-        |student| Student.new(student['age'], student['classroom'], student['name'], student['id'] ) 
-      }
-    end
-    return students
-  end
-
-  def get_all_teachers
-    file = 'teachers.json'
-    teachers=[];
-    if File.exist?(file) && File.read(file) != ''
-      teachers = JSON.parse(File.read(file)).map { 
-        |teacher| Teacher.new(teacher['age'], teacher['specialization'], teacher['name'], teacher['id'] ) 
-      }
-    end
-    return teachers
-  end
-
-  def get_all_rentals
-    file = 'rentals.json'
-    rentals=[];
-    if File.exist?(file) && File.read(file) != ''
-      rentals = JSON.parse(File.read(file)).map { 
-        |rental| Rental.new(rental['date'],
-          Person.new(rental['person']['age'],rental['person']['name'],rental['person']['id']),
-          Book.new(rental['book']['title'], rental['book']['author'])
-        ) 
-      }
-    end
-    return rentals
   end
 end
