@@ -45,7 +45,8 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    rental = Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+    book = "#{@book_list[index_of_book].title} by #{@book_list[index_of_book].author}"
+    rental = Rental.new(date, @people[index_of_person].id, book)
     puts 'Rental successfully created!'
     @rentals << rental unless @rentals.include?(rental)
   end
@@ -53,17 +54,18 @@ class App
   def list_rentals_by_id
     print "Enter a person's ID: "
     person_id = gets.chomp.to_i
+    rentals_by_id = @rentals.select { |rental| rental.person == person_id }
     puts "Rentals list:\n\n"
-    if @rentals.empty?
+    if rentals_by_id.empty?
       puts 'The list is empty, add some rentals...'
     else
-      @rentals.select do |rental|
-        if rental.person.id == person_id
-          puts "Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}"
+      rentals_by_id.each do |rental|
+          
+          puts "Date: #{rental.date}, Book: #{rental.book}"
         end
       end
     end
-  end
+
 
   def list_all_books
     puts "Books list:\n\n"
