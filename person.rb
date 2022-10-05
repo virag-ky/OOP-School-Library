@@ -1,7 +1,7 @@
 require_relative 'nameable'
 
 class Person < Nameable
-  def initialize(id, age, name, parent_permission: true)
+  def initialize(_id, age, name, parent_permission: true)
     super()
     @id = Random.rand(1..100)
     @age = age

@@ -6,6 +6,7 @@ require_relative 'teacher'
 require_relative 'classroom'
 require_relative 'save_books'
 require_relative 'save_people'
+require_relative 'save_rentals'
 
 class App
   def initialize
@@ -13,15 +14,17 @@ class App
     @people = load_people
     @students = []
     @teachers = []
-    @rentals = []
+    @rentals = load_rentals
   end
 
   include SaveBooksData
   include SavePeoplesData
+  include SaveRentalsData
 
   def save_data
     save_books(@book_list)
     save_people(@people)
+    save_rentals(@rentals)
   end
 
   def create_book
@@ -79,8 +82,8 @@ class App
     @students << student unless @students.include?(student)
   end
 
-  def create_teacher(age, specialization, name)
-    teacher = Teacher.new(age, specialization, name)
+  def create_teacher(age, name)
+    teacher = Teacher.new(age, name)
     @people << teacher unless @people.include?(teacher)
     @teachers << teacher unless @teachers.include?(teacher)
   end
@@ -130,7 +133,7 @@ class App
     specialization = gets.chomp
     puts "Enter the teacher's name:"
     name = gets.chomp
-    create_teacher(age, specialization, name)
+    create_teacher(age, name)
     puts "The teacher named '#{name}' of age #{age} with the specialization #{specialization} was created successfully!"
   end
 
@@ -150,20 +153,22 @@ class App
   end
 
   def list_all_students
-    if @students.empty?
+    only_students = @people.select { |student| student.instance_of?(Student) }
+    if only_students.empty?
       puts 'The list is empty, add some students...'
     else
-      @students.each do |student|
+      only_students.each do |student|
         puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
       end
     end
   end
 
   def list_all_teachers
-    if @teachers.empty?
+    only_teachers = @people.select { |teacher| teacher.instance_of?(Teacher) }
+    if only_teachers.empty?
       puts 'The list is empty, add some teachers...'
     else
-      @teachers.each do |teacher|
+      only_teachers.each do |teacher|
         puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
       end
     end

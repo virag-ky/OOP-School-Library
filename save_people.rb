@@ -14,7 +14,7 @@ module SavePeoplesData
       when Student
         students_list << { id: person.id, age: person.age, classroom: person.classroom, name: person.name }
       when Teacher
-        teachers_list << { id: person.id, age: person.age, name: person.name}
+        teachers_list << { id: person.id, age: person.age, name: person.name }
       end
     end
     File.write(students_file, JSON.generate(students_list))
@@ -32,12 +32,12 @@ module SavePeoplesData
     end
 
     JSON.parse(File.read(students_file)).each do |student|
-      people_list << Student.new(student['id'], student['age'], student['classroom'], student['name'],
+      people_list << Student.new(student['age'], student['classroom'], student['name'],
                                  parent_permission: student['parent_permission'])
     end
 
     JSON.parse(File.read(teachers_file)).each do |teacher|
-      people_list << Teacher.new(teacher['id'], teacher['age'], teacher['name'])
+      people_list << Teacher.new(teacher['age'], teacher['name'])
     end
     people_list
   end
