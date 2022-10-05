@@ -23,7 +23,7 @@ def main
     select = Select.new
     select.menu(option, app)
     select.extra_options(option, app)
-    exit unless option != 9
+    break unless option != 9
   end
   app.save_data
 end

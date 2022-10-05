@@ -20,6 +20,6 @@ module SaveBooksData
     JSON.parse(File.read(file)).each do |book|
       books_list << Book.new(book['title'], book['author'])
     end
-   return books_list
+    books_list
   end
 end
