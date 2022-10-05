@@ -84,7 +84,7 @@ class App
       puts 'List is empty, please add some books...'
     end
     @book_list = books_data
-    puts books_data
+    puts @book_list
   end
 
   def create_student(age, classroom, name, parent_permission)
