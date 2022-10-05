@@ -41,18 +41,8 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp
-
-    puts 'Person Selected'
-    #people = list_all_people
-    puts @people[index_of_person].name
-
-    puts 'Book Selected'
-    #book_list = list_all_books
-    puts @book_list[index_of_book].title
-
     @rentals = get_all_rentals
     @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
-    
     rental = []
     @rentals.each do |rent|
       rental << { date: rent.date, 
@@ -81,12 +71,8 @@ class App
   end
 
   def list_all_books
-    # file = 'books.json'
-    # books_data = []
     puts "Books list:\n\n"
-
     @book_list = get_all_books
-
     if @book_list.length == 0
       puts 'List is empty, please add some books...'
     else
@@ -94,22 +80,6 @@ class App
         puts "#{index}) Title: #{book.title}, Author: #{book.author} "
       end
     end
-
-
-
-    # if File.exist?(file) && File.read(file) != ''
-    #   JSON.parse(File.read(file)).each_with_index do |book, index|
-    #     books_data << "#{index}) Title: #{book['title']}, Author: #{book['author']} "
-    #   end
-    #   JSON.parse(File.read(file)).each_with_index do |book|
-    #     @book_list << Book.new(book['title'], book['author'])
-    #   end
-    # else
-    #   puts 'List is empty, please add some books...'
-    # end
-    #@book_list = books_data
-    
-    #puts books_data
   end
 
   def get_all_books
@@ -207,21 +177,6 @@ class App
     @people.each_with_index do |person, index|
       puts "#{index} ID: #{person.id}, Name:  #{person.name}, Age:  #{person.age}"
     end
-
-    # student_array = []
-    # student_array = JSON.parse(File.read('students.json'))
-    # teacher_array = []
-    # teacher_array = JSON.parse(File.read('teachers.json'))
-    # people_array = teacher_array | student_array
-    # peopledata = []
-    # people_array.each_with_index do |person, index|
-    #   peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-    # end
-    # people_array.each_with_index do |person, index|
-    #   peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-    # end
-    # @people = peopledata
-    # puts @people
   end
 
   def list_all_students
@@ -234,20 +189,6 @@ class App
         puts "ID: #{student.id}, Name:  #{student.name}, Age:  #{student.age}"
       end
     end
-
-    # filename = 'students.json'
-    # studentsdata = []
-    # if File.exist?(filename) && File.read(filename) != ''
-    #   JSON.parse(File.read(filename)).each do |student|
-    #     studentsdata.push("ID: #{student['id']}, Name:  #{student['name']}, Age:  #{student['age']}")
-    #   end
-    #   JSON.parse(File.read(filename)).each_with_index do |student|
-    #     @students << Student.new(student['id'], student['name'], student['age'])
-    #   end
-    # else
-    #   puts 'Student List is empty. Please add students'
-    # end
-    # puts studentsdata
   end
 
   def list_all_teachers
@@ -260,20 +201,6 @@ class App
         puts "ID: #{teacher.id}, Name:  #{teacher.name}, Age:  #{teacher.age}"
       end
     end
-
-    # filename = 'teachers.json'
-    # teachersdata = []
-    # if File.exist?(filename) && File.read(filename) != ''
-    #   JSON.parse(File.read(filename)).each do |teacher|
-    #     teachersdata.push("ID: #{teacher['id']}, Name:  #{teacher['name']}, Age:  #{teacher['age']}")
-    #   end
-    #   JSON.parse(File.read(filename)).each_with_index do |teacher|
-    #     @teachers << Teacher.new(teacher['id'], teacher['name'], teacher['age'])
-    #   end
-    # else
-    #   puts 'There are no teachers. Please add some teachers to the list...'
-    # end
-    # puts teachersdata
   end
 
   def get_all_students
