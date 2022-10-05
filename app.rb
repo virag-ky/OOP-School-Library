@@ -7,14 +7,19 @@ require_relative 'classroom'
 require_relative 'save_books'
 
 class App
-  include SaveBooksData
 
   def initialize
-    @book_list = get_books
+    @book_list = load_books
     @people = []
     @students = []
     @teachers = []
     @rentals = []
+  end
+
+  include SaveBooksData
+
+  def save_data
+    save_books(@book_list)
   end
 
   def create_book

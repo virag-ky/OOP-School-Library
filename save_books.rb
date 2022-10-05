@@ -3,19 +3,23 @@ require 'json'
 module SaveBooksData
   def save_books(books)
     books_list = []
-    return unless File.exist?('./books.json')
+    file = './books.json'
+     return unless File.exist?(file)
+
     books.each do |book|
-      books_list << {title: book.title, author: book.author}
+      books_list << { title: book.title, author: book.author }
     end
-    File.write('./books.json', JSON.generate(books_list))
+    File.write(file, JSON.generate(books_list))
   end
 
-  def get_books
+  def load_books
     books_list = []
-    return books_list unless File.exist?('./books.json') && File.read('./books.json') != ''
-      JSON.parse(File.read(books.json)).each do |book|
-        books_list << Book.new(book['title'], book['author'])
-      end
-      books_list
+    file = './books.json'
+    return books_list unless File.exist?(file) && File.read(file) !=''
+
+    JSON.parse(File.read(file)).each do |book|
+      books_list << Book.new(book['title'], book['author'])
+    end
+   return books_list
   end
 end
