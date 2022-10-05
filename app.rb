@@ -4,6 +4,8 @@ require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
+require_relative 'load_data'
+require 'json'
 
 class App
   def initialize
@@ -14,14 +16,21 @@ class App
     @rentals = []
   end
 
+  include LoadData
+
   def create_book
     puts 'Enter the title of the book:'
     title = gets.chomp
     puts 'Enter the author of the book:'
     author = gets.chomp
-    book = Book.new(title, author)
+    @book_list = load_all_books if @book_list.length.zero?
+    @book_list << Book.new(title, author)
     puts "The book \'#{title}\' by #{author} is created successfully!"
-    @book_list << book unless @book_list.include?(book)
+    books = []
+    @book_list.each do |book|
+      books << { title: book.title, author: book.author }
+    end
+    File.write('books.json', books.to_json)
   end
 
   def create_rental
@@ -32,13 +41,26 @@ class App
     list_all_people
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
-    date = gets.chomp.to_i
-    rental = Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+    date = gets.chomp
+
+    puts "Person Selected: #{@people[index_of_person].name}\n"
+    puts "Book Selected: #{@book_list[index_of_book].title}\n"
+
+    @rentals = load_all_rentals
+    @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+
+    rental = []
+    @rentals.each do |rent|
+      rental << { date: rent.date,
+                  person: { id: rent.person.id, name: rent.person.name, age: rent.person.age },
+                  book: { title: rent.book.title, author: rent.book.author } }
+    end
+    File.write('rentals.json', rental.to_json)
     puts 'Rental successfully created!'
-    @rentals << rental unless @rentals.include?(rental)
   end
 
   def list_rentals_by_id
+    @rentals = load_all_rentals
     print "Enter a person's ID: "
     person_id = gets.chomp.to_i
     puts "Rentals list:\n\n"
@@ -55,25 +77,34 @@ class App
 
   def list_all_books
     puts "Books list:\n\n"
-    if @book_list.empty?
-      puts 'The list is empty, add some books...'
+    @book_list = load_all_books
+    if @book_list.length.zero?
+      puts 'List is empty, please add some books...'
     else
       @book_list.each_with_index do |book, index|
-        puts "#{index}) Title: '#{book.title}', Author: #{book.author}"
+        puts "#{index}) Title: #{book.title}, Author: #{book.author} "
       end
     end
   end
 
   def create_student(age, classroom, name, parent_permission)
-    student = Student.new(age, classroom, name, parent_permission: parent_permission)
-    @people << student unless @people.include?(student)
-    @students << student unless @students.include?(student)
+    @students = load_all_students if @students.length.zero?
+    @students << Student.new(age, classroom, name, parent_permission: parent_permission)
+    student = []
+    @students.each do |std|
+      student << { id: std.id, name: std.name, age: std.age, classroom: std.classroom }
+    end
+    File.write('students.json', student.to_json)
   end
 
   def create_teacher(age, specialization, name)
-    teacher = Teacher.new(age, specialization, name)
-    @people << teacher unless @people.include?(teacher)
-    @teachers << teacher unless @teachers.include?(teacher)
+    @teachers = load_all_teachers if @teachers.length.zero?
+    @teachers << Teacher.new(age, specialization, name)
+    teacher = []
+    @teachers.each do |tch|
+      teacher << { id: tch.id, name: tch.name, age: tch.age, specialization: tch.specialization }
+    end
+    File.write('teachers.json', teacher.to_json)
   end
 
   def create_person
@@ -100,20 +131,6 @@ class App
     puts "The student named '#{name}' of age #{age} with the classroom number #{classroom} was created successfully!"
   end
 
-  def permission?(parent_permission)
-    print 'Has parent permission? [Y/N]:'
-    permission = gets.chomp
-
-    case permission
-    when 'n', 'N'
-      !parent_permission
-    when 'y', 'Y'
-      parent_permission
-    else
-      permission?(parent_permission)
-    end
-  end
-
   def teacher_option
     puts 'Enter the age of the teacher:'
     age = gets.chomp.to_i
@@ -126,36 +143,36 @@ class App
   end
 
   def list_all_people
-    puts "People's list:\n\n"
-    if @people.empty?
-      puts 'The list is empty, add some people...'
-    else
-      @people.each_with_index do |person, index|
-        if person.instance_of?(Student)
-          puts "#{index}) [Student] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        else
-          puts "#{index}) [Teacher] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-        end
-      end
+    @students = load_all_students if @students.length.zero?
+    @teachers = load_all_teachers if @teachers.length.zero?
+
+    @people = @teachers | @students
+
+    @people.each_with_index do |person, index|
+      puts "#{index} ID: #{person.id}, Name:  #{person.name}, Age:  #{person.age}"
     end
   end
 
   def list_all_students
-    if @students.empty?
-      puts 'The list is empty, add some students...'
+    @student = load_all_students
+
+    if @student.length.zero?
+      puts 'Student List is empty. Please add students'
     else
-      @students.each do |student|
-        puts "Name: #{student.name}, Classroom: #{student.classroom}, ID: #{student.id}, Age: #{student.age}"
+      @student.each_with_index do |student, _index|
+        puts "ID: #{student.id}, Name:  #{student.name}, Age:  #{student.age}"
       end
     end
   end
 
   def list_all_teachers
-    if @teachers.empty?
-      puts 'The list is empty, add some teachers...'
+    @teachers = load_all_teachers
+
+    if @teachers.length.zero?
+      puts 'There are no teachers. Please add some teachers to the list...'
     else
-      @teachers.each do |teacher|
-        puts "Name: #{teacher.name}, ID: #{teacher.id}, Age: #{teacher.age}"
+      @teachers.each_with_index do |teacher, _index|
+        puts "ID: #{teacher.id}, Name:  #{teacher.name}, Age:  #{teacher.age}"
       end
     end
   end
