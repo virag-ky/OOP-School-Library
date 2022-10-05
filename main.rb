@@ -25,5 +25,6 @@ def main
     select.extra_options(option, app)
     exit unless option != 9
   end
+  save_books(app.book_list)
 end
 main

@@ -4,10 +4,13 @@ require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
+require_relative 'save_books'
 
 class App
+  include SaveBooksData
+
   def initialize
-    @book_list = []
+    @book_list = get_books
     @people = []
     @students = []
     @teachers = []
@@ -19,9 +22,8 @@ class App
     title = gets.chomp
     puts 'Enter the author of the book:'
     author = gets.chomp
-    book = Book.new(title, author)
+    @book_list << Book.new(title, author)
     puts "The book \'#{title}\' by #{author} is created successfully!"
-    @book_list << book unless @book_list.include?(book)
   end
 
   def create_rental
