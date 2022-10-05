@@ -5,21 +5,23 @@ require_relative 'student'
 require_relative 'teacher'
 require_relative 'classroom'
 require_relative 'save_books'
+require_relative 'save_people'
 
 class App
-
   def initialize
     @book_list = load_books
-    @people = []
+    @people = load_people
     @students = []
     @teachers = []
     @rentals = []
   end
 
   include SaveBooksData
+  include SavePeoplesData
 
   def save_data
     save_books(@book_list)
+    save_people(@people)
   end
 
   def create_book
