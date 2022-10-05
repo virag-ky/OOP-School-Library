@@ -24,7 +24,7 @@ class App
     puts "The book \'#{title}\' by #{author} is created successfully!"
     books = []
     @book_list.each do |book|
-    books << { title: book.title, author: book.author }
+      books << { title: book.title, author: book.author }
     end
     File.write('books.json', books.to_json)
   end
@@ -38,10 +38,10 @@ class App
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
     date = gets.chomp.to_i
-    @rentals <<  Rental.new(date, @people[index_of_person], @book_list[index_of_book])
-    rental = []
-    @rentals.each do |rent| 
-      rental << {date: rent.date, person: rent.person.name, title: rent.book.title}
+    @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
+    rental_arr = []
+    @rentals.each do |rent|
+      rental_arr << { date: rent.date, person: rent.person.name, title: rent.book.title }
     end
     File.write('rentals.json', rental.to_json)
     puts 'Rental successfully created!'
@@ -145,26 +145,17 @@ class App
   end
 
   def list_all_people
-    # list_all_students
-    # list_all_teachers
-    # @students = list_all_students
-    # @teachers = list_all_teachers 
-    # people = [*@teachers, *@students] 
-   
-    # people.each_with_index do |person|
-    #    puts "ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}" 
-    #  end 
     student_array = []
     student_array = JSON.parse(File.read('students.json'))
-    teacher_array = [] 
-    teacher_array = JSON.parse(File.read('teachers.json')) 
-    people_array = teacher_array | student_array 
+    teacher_array = []
+    teacher_array = JSON.parse(File.read('teachers.json'))
+    people_array = teacher_array | student_array
     peopledata = []
-    people_array.each_with_index do |person, index| 
+    people_array.each_with_index do |person, index|
       peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-      puts peopledata 
+      puts peopledata
+    end
   end
-end
 
   def list_all_students
     filename = 'students.json'
