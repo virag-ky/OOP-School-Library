@@ -42,6 +42,7 @@ class App
     puts 'Person Selected'
     #people = list_all_people
     puts @people[index_of_person]
+    puts @people[index_of_person][7+8]
 
     puts 'Book Selected'
     #book_list = list_all_books
@@ -49,10 +50,10 @@ class App
 
     @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
     rental = []
-    @rentals.each do |rent| 
+    @rentals.each do |rent|
       rental << { date: rent.date, person: rent.person, title: rent.book }
     end
-    File.write('rentals.json', rental.to_json)
+    File.write('rentals.json', rental.to_json, mode: "a")
     puts 'Rental successfully created!'
   end
 
