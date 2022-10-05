@@ -37,11 +37,20 @@ class App
     list_all_people
     index_of_person = gets.chomp.to_i
     puts 'Enter a date: e.g 2022/09/28'
-    date = gets.chomp.to_i
+    date = gets.chomp
+
+    puts 'Person Selected'
+    #people = list_all_people
+    puts @people[index_of_person]
+
+    puts 'Book Selected'
+    #book_list = list_all_books
+    puts @book_list[index_of_book]
+
     @rentals << Rental.new(date, @people[index_of_person], @book_list[index_of_book])
-    rental_arr = []
+    rental = []
     @rentals.each do |rent|
-      rental_arr << { date: rent.date, person: rent.person.name, title: rent.book.title }
+      rental << { date: rent.date, person: rent.person, book: rent.book }
     end
     File.write('rentals.json', rental.to_json)
     puts 'Rental successfully created!'
@@ -74,6 +83,7 @@ class App
     else
       puts 'List is empty, please add some books...'
     end
+    @book_list = books_data
     puts books_data
   end
 
@@ -153,8 +163,9 @@ class App
     peopledata = []
     people_array.each_with_index do |person, index|
       peopledata.push("#{index} ID: #{person['id']} Name: #{person['name']}, Age: #{person['age']}")
-      puts peopledata
     end
+    @people = peopledata
+    puts @people
   end
 
   def list_all_students
