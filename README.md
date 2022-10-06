@@ -12,7 +12,6 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/79658534/192894530-cde18f0e-8e7e-4b66-9985-8945f60c8bfa.png)
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -30,6 +29,12 @@ git clone git@github.com:virag-ky/OOP-School-Library.git
 
 ```
 bundle install
+```
+
+### Run tests
+
+```
+rspec spec spec/[FILE NAME FROM THE SPEC FOLDER]
 ```
 
 ### Run rubocop / linting
