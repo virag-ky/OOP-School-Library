@@ -10,7 +10,7 @@ describe Teacher do
     it 'correct teacher details' do
       expect(@teacher.age).to eq(39)
       expect(@teacher.name).to eq('Micheal Burry')
-      expect(@teacher.specialization).to eq(".nET")
+      expect(@teacher.specialization).to eq('.nET')
     end
   end
 

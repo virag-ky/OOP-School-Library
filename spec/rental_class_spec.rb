@@ -20,5 +20,4 @@ describe Rental do
       expect(@rent).to be_an_instance_of Rental
     end
   end
-
 end
